@@ -139,6 +139,16 @@ Result of the run on 16 November 2026 (325,208 models in S5, of which 19,904 sat
 4. **S5.** It is the standard logic for metaphysical possibility, but it is a choice. Steps 4 and 5 of the proof only hold if "every possible world" is the same set seen from any world. Sections 1 and 4 and the actual-world version do not need this.
 5. **Scope.** The theorem does not say how many necessary beings there are, nor what they are: the domain covers anything that exists, so the root could be a concrete being or an abstract principle. It does not say the root has a mind, a will or goodness. Since the root exists even in worlds where the things it helps explain do not, its existence alone does not settle what it explains; whether that link is chance or choice is beyond the theorem. In its modal form the argument does not say the root explains our universe, only that it exists and could be a root. If "God" means only "a necessary being that everything contingent could trace back to", ElCruz proves God from P. If it means the God of the religions, it does not.
 
+## Interpretive note: a higher-dimensional being
+
+A common picture treats God as a higher-dimensional being, outside our four-dimensional spacetime, who sees and handles time the way we handle a sheet of paper. ElCruz does not use this picture as a premise, for three reasons:
+
+- It explains how such a being would act, not that it exists.
+- A being that needs a dimension in order to exist depends on it. If dimensions, time and gravity are contingent (there could have been a different number of dimensions and different laws), then, by section 4, nothing of that kind takes part in the explanation of a root. Such a being would be a powerful creature, not the root, and the three options of section 1 would apply to it again.
+- Extra dimensions are a physics hypothesis with no experimental evidence so far.
+
+As an analogy the picture is useful: the root stands to time as we stand to the sheet of paper. This fits the theorem. Something that exists in every possible world also exists in worlds without time or space, if such worlds are possible, so it cannot depend on time or space in order to exist.
+
 ## Changes from version 2
 
 - New section 1: a map of the options that needs no possibility premise.

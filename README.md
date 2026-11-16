@@ -1,40 +1,40 @@
 # ElCruz - Proof of God
 
-Argumento modal para a existência de um ser necessário. Criado em 15/11/2026.
+A modal argument for the existence of a necessary being. Created on 15 November 2026.
 
-**Status:** a dedução é válida e foi verificada por máquina. O argumento depende de uma premissa de possibilidade (P) que não pode ser provada nem refutada. Como prova de Deus, ele vale o quanto P vale.
+**Status:** the deduction is valid and has been machine-checked. The argument rests on one possibility premise (P) that can be neither proven nor refuted. As a proof of God, it is worth exactly as much as P is.
 
-## Definições
+## Definitions
 
-- **Contingente:** existe em algum mundo possível, mas não em todos.
-- **Necessário:** existe em todos os mundos possíveis.
-- **Explicador:** entidade que explica por que existem coisas contingentes em vez de nenhuma.
+- **Contingent:** exists in some possible world, but not in all of them.
+- **Necessary:** exists in every possible world.
+- **Explainer:** an entity that explains why there are contingent things rather than none.
 
-## Axiomas
+## Axioms
 
-Só fixam o que "explicar" significa.
+They only fix what "to explain" means.
 
-- **A1.** O que explica, existe: um explicador existe no mundo em que explica.
-- **A2.** Um explicador não é contingente. Se fosse, seria uma das coisas cuja existência ele deveria explicar, e a explicação pressuporia o que quer explicar.
+- **A1.** What explains, exists: an explainer exists in the world in which it explains.
+- **A2.** An explainer is not contingent. If it were, it would be one of the things whose existence it is supposed to explain, and the explanation would presuppose what it sets out to explain.
 
-## Premissa
+## Premise
 
-- **P.** É possível que exista um explicador, isto é, em pelo menos um mundo possível alguma entidade explica a existência das coisas contingentes.
+- **P.** It is possible that an explainer exists; that is, in at least one possible world, some entity explains the existence of contingent things.
 
-## Teorema
+## Theorem
 
-Existe, no mundo real, um ser necessário que é explicador em pelo menos um mundo possível.
+There exists, in the actual world, a necessary being that is an explainer in at least one possible world.
 
-## Prova
+## Proof
 
-1. Por P, há um mundo possível *w* com um explicador *e*.
-2. Por A1, *e* existe em *w*.
-3. Por A2, *e* não é contingente. Como ele existe em *w*, a única forma de não ser contingente é existir em todos os mundos possíveis. Logo, *e* é necessário.
-4. O mundo real é um desses mundos, então *e* existe aqui. ∎
+1. By P, there is a possible world *w* with an explainer *e*.
+2. By A1, *e* exists in *w*.
+3. By A2, *e* is not contingent. Since it exists in *w*, the only way for it not to be contingent is to exist in every possible world. Therefore *e* is necessary.
+4. The actual world is one of those worlds, so *e* exists here. ∎
 
-## Notação modal
+## Modal notation
 
-Lógica S5. □ = necessariamente, ◇ = possivelmente, E(y) = y existe, X(y) = y é explicador.
+S5 logic. □ = necessarily, ◇ = possibly, E(y) = y exists, X(y) = y is an explainer.
 
 ```
 A1  □∀y (X(y) → E(y))
@@ -43,31 +43,31 @@ P   ◇∃y X(y)
 T   ∃y (□E(y) ∧ ◇X(y))
 ```
 
-## Verificação
+## Verification
 
-O programa `elcruz_check.py` (mesma pasta, sem dependências) enumera todos os modelos pequenos e testa cada um:
+The program `elcruz_check.py` (same folder, no dependencies) enumerates every small model and tests each one:
 
 ```bash
 python3 elcruz_check.py
 ```
 
-Resultado da execução de 15/11/2026: 1.062.644 modelos em S5, dos quais 12.051 satisfazem A1, A2 e P.
+Result of the run on 15 November 2026: 1,062,644 models in S5, of which 12,051 satisfy A1, A2 and P.
 
-- **Validade:** nenhum contraexemplo. A busca é prova completa, não amostragem: para refutar o teorema bastam as testemunhas que as premissas e a negação da conclusão exigem (um indivíduo, três mundos), então qualquer contraexemplo maior conteria um desse tamanho.
-- **Sem colapso modal:** existe modelo que satisfaz A1, A2 e P e ainda contém coisas contingentes.
-- **Sem peça redundante:** tirando A1, A2 ou P, aparece contraexemplo.
-- **Dependência de S5:** sem simetria entre mundos, o explicador pode não existir no mundo real. Sem transitividade, ele pode existir aqui sem ser necessário. Os passos 3 e 4 só valem se "todos os mundos possíveis" for o mesmo conjunto visto de qualquer mundo.
-- **Premissa rival:** P e "é possível um mundo sem nenhum ser necessário" nunca são verdadeiras juntas, e cada uma é consistente sozinha.
+- **Validity:** no counterexample. The search is a complete proof, not a sample: refuting the theorem only requires the witnesses demanded by the premises and by the negation of the conclusion (one individual, three worlds), so any larger counterexample would contain one of that size.
+- **No modal collapse:** there is a model that satisfies A1, A2 and P and still contains contingent things.
+- **No redundant part:** remove A1, A2 or P and a counterexample appears.
+- **Dependence on S5:** without symmetry between worlds, the explainer may fail to exist in the actual world. Without transitivity, it may exist here without being necessary. Steps 3 and 4 only hold if "every possible world" is the same set seen from any world.
+- **Rival premise:** P and "a world with no necessary being is possible" are never true together, and each is consistent on its own.
 
-## O que o modelo não assume
+## What the model does not assume
 
-- Não assume que toda coisa contingente tem explicação. Basta ser possível uma única explicação.
-- Não proíbe cadeias infinitas de dependência. O argumento não usa cadeias.
-- Explicar não significa tornar necessário, então coisas contingentes continuam contingentes.
+- It does not assume that every contingent thing has an explanation. It is enough that a single explanation be possible.
+- It does not forbid infinite chains of dependence. The argument does not use chains.
+- To explain is not to make necessary, so contingent things remain contingent.
 
-## Pontos atacáveis
+## Points of attack
 
-1. **P equivale à conclusão.** P parece modesta, mas junto com A2 ela diz "é possível um ser necessário", e em S5 isso já é "existe um ser necessário". A premissa rival leva à conclusão oposta, e o ElCruz não desempata. Ele só fixa o preço de negar P: sustentar que explicar a existência do contingente é impossível em qualquer mundo, não apenas ausente no nosso.
-2. **A2.** Um crítico pode dizer que, numa cadeia infinita, cada coisa contingente é explicada pela anterior e isso basta. A resposta usual é que isso explica cada membro, mas não por que existe algum membro. A disputa segue aberta.
-3. **Explicação por entidade.** P assume que quem explica é uma entidade. Se a explicação puder ser um princípio abstrato, sem entidade nenhuma, o argumento não alcança.
-4. **Alcance.** O teorema não diz que esse ser explica o nosso universo, só que ele existe e que poderia explicar um. Também não diz que ele tem mente, vontade ou bondade. Se "Deus" significa apenas "ser necessário capaz de explicar o contingente", o ElCruz prova Deus a partir de P. Se significa o Deus das religiões, não prova.
+1. **P is equivalent to the conclusion.** P looks modest, but together with A2 it says "a necessary being is possible", and in S5 that already is "a necessary being exists". The rival premise leads to the opposite conclusion, and ElCruz does not break the tie. It only fixes the price of denying P: holding that explaining the existence of contingent things is impossible in every world, not merely absent in ours.
+2. **A2.** A critic can say that, in an infinite chain, each contingent thing is explained by the previous one and that this is enough. The usual reply is that this explains each member, but not why there is any member at all. The dispute remains open.
+3. **Explanation by an entity.** P assumes that what explains is an entity. If the explanation could be an abstract principle, with no entity at all, the argument does not reach it.
+4. **Scope.** The theorem does not say that this being explains our universe, only that it exists and that it could explain one. Nor does it say that it has a mind, a will or goodness. If "God" means only "a necessary being capable of explaining the contingent", ElCruz proves God from P. If it means the God of the religions, it does not.

@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""ElCruz: verificacao exaustiva em modelos finitos.
-
-W = mundos, D = individuos.
-E[d, w]: d existe em w.
-X[d, w]: em w, d explica por que existem coisas contingentes.
-R: acessibilidade entre mundos (None = S5, todo mundo acessa todo mundo).
-"""
+"""Exhaustive finite-model check of the ElCruz argument; notation follows README.md."""
 import sys
 from itertools import product
 
@@ -16,6 +10,7 @@ class Model:
         self.E, self.X, self.a, self.R = E, X, actual, R
 
     def acc(self, w, v):
+        # R is None means S5: every world sees every world.
         return self.R is None or self.R[w, v]
 
     def cont(self, d, w):
@@ -44,7 +39,7 @@ class Model:
     def T_exist(self):
         return any(self.E[d, self.a] and self.poss_expl(d) for d in self.D)
 
-    def Q(self):
+    def rival(self):
         return any(
             self.acc(self.a, w)
             and not any(self.E[d, w] and self.nec(d, w) for d in self.D)
@@ -55,14 +50,14 @@ class Model:
         return any(self.cont(d, self.a) for d in self.D)
 
     def show(self):
-        out = [f"    mundos {list(self.W)}, mundo real = {self.a}"]
+        out = [f"    worlds {list(self.W)}, actual world = {self.a}"]
         if self.R is not None:
             arrows = [f"{w}->{v}" for w in self.W for v in self.W if w != v and self.R[w, v]]
-            out.append("    acessibilidade (alem de w->w): " + (", ".join(arrows) or "nenhuma"))
+            out.append("    accessibility (besides w->w): " + (", ".join(arrows) or "none"))
         for d in self.D:
             ex = [w for w in self.W if self.E[d, w]]
             xs = [w for w in self.W if self.X[d, w]]
-            out.append(f"    individuo {d}: existe em {ex}, explica em {xs}")
+            out.append(f"    individual {d}: exists in {ex}, explains in {xs}")
         return "\n".join(out)
 
 
@@ -112,14 +107,14 @@ failures = []
 
 
 def expect(label, ok, detail=""):
-    print(f"[{'OK' if ok else 'FALHOU'}] {label}" + (f"\n{detail}" if detail else ""))
+    print(f"[{'OK' if ok else 'FAILED'}] {label}" + (f"\n{detail}" if detail else ""))
     if not ok:
         failures.append(label)
 
 
 def run_s5():
     sizes = [(d, w) for d in (1, 2) for w in (1, 2, 3, 4)] + [(3, 3)]
-    total = premises = counter = p_and_q = 0
+    total = premises = counter = p_and_rival = 0
     wit = {}
     for m in s5_models(sizes):
         total += 1
@@ -128,52 +123,55 @@ def run_s5():
             premises += 1
             if not m.T():
                 counter += 1
-                wit.setdefault("contra", m)
-            if m.Q():
-                p_and_q += 1
-            if "contingencia" not in wit and m.contingent_in_actual():
-                wit["contingencia"] = m
+                wit.setdefault("counter", m)
+            if m.rival():
+                p_and_rival += 1
+            if "contingency" not in wit and m.contingent_in_actual():
+                wit["contingency"] = m
         elif a2 and p and not a1:
-            if "semA1" not in wit and not m.T():
-                wit["semA1"] = m
+            if "no_A1" not in wit and not m.T():
+                wit["no_A1"] = m
         elif a1 and p and not a2:
-            if "semA2" not in wit and not m.T():
-                wit["semA2"] = m
+            if "no_A2" not in wit and not m.T():
+                wit["no_A2"] = m
         elif a1 and a2 and not p:
-            if "semP" not in wit and not m.T():
-                wit["semP"] = m
-            if m.Q():
-                wit.setdefault("Q_sem_P", m)
+            if "no_P" not in wit and not m.T():
+                wit["no_P"] = m
+            if m.rival():
+                wit.setdefault("rival_without_P", m)
             else:
-                wit.setdefault("nem_P_nem_Q", m)
+                wit.setdefault("neither", m)
 
-    print(f"S5: {total} modelos enumerados, {premises} satisfazem A1, A2 e P.\n")
+    print(f"S5: {total} models enumerated, {premises} satisfy A1, A2 and P.\n")
     expect(
-        f"1. Validade: A1, A2, P => T ({counter} contraexemplos)",
+        f"1. Validity: A1, A2, P => T ({counter} counterexamples)",
         counter == 0,
-        wit["contra"].show() if "contra" in wit else "",
+        wit["counter"].show() if "counter" in wit else "",
     )
     expect(
-        "2. Consistencia sem colapso modal: modelo de A1, A2, P com coisa contingente",
-        "contingencia" in wit,
-        wit["contingencia"].show() if "contingencia" in wit else "",
+        "2. Consistency without modal collapse: a model of A1, A2, P with a contingent thing",
+        "contingency" in wit,
+        wit["contingency"].show() if "contingency" in wit else "",
     )
-    for key, name in (("semA1", "A1"), ("semA2", "A2"), ("semP", "P")):
+    for key, name in (("no_A1", "A1"), ("no_A2", "A2"), ("no_P", "P")):
         expect(
-            f"3. Independencia: sem {name} existe contraexemplo",
+            f"3. Independence: without {name} there is a counterexample",
             key in wit,
             wit[key].show() if key in wit else "",
         )
-    expect(f"4a. P e Q nunca juntas ({p_and_q} modelos com as duas)", p_and_q == 0)
     expect(
-        "4b. Q sem P e consistente (lado oposto tambem tem modelo)",
-        "Q_sem_P" in wit,
-        wit["Q_sem_P"].show() if "Q_sem_P" in wit else "",
+        f"4a. P and the rival premise never hold together ({p_and_rival} models with both)",
+        p_and_rival == 0,
     )
     expect(
-        "4c. Nem P nem Q tambem e consistente",
-        "nem_P_nem_Q" in wit,
-        wit["nem_P_nem_Q"].show() if "nem_P_nem_Q" in wit else "",
+        "4b. The rival premise without P is consistent (the opposite side also has a model)",
+        "rival_without_P" in wit,
+        wit["rival_without_P"].show() if "rival_without_P" in wit else "",
+    )
+    expect(
+        "4c. Neither P nor the rival premise is also consistent",
+        "neither" in wit,
+        wit["neither"].show() if "neither" in wit else "",
     )
 
 
@@ -197,26 +195,26 @@ def run_frames():
         if kind == "S5" and not m.T():
             s5_counter += 1
 
-    print(f"\nOutras logicas modais: {total} modelos enumerados.\n")
+    print(f"\nOther modal logics: {total} models enumerated.\n")
     expect(
-        "5a. Sem simetria entre mundos o explicador pode nao existir no mundo real",
+        "5a. Without symmetry between worlds the explainer may not exist in the actual world",
         t_counter is not None,
         t_counter.show() if t_counter else "",
     )
     expect(
-        f"5b. Com simetria (B) ele existe no mundo real ({b_exist_counter} contraexemplos)",
+        f"5b. With symmetry (B) it exists in the actual world ({b_exist_counter} counterexamples)",
         b_exist_counter == 0,
     )
     expect(
-        "5c. Com simetria mas sem transitividade ele pode nao ser necessario no mundo real",
+        "5c. With symmetry but without transitivity it may not be necessary in the actual world",
         b_nec_counter is not None,
         b_nec_counter.show() if b_nec_counter else "",
     )
-    expect(f"5d. Em S5 o teorema completo vale ({s5_counter} contraexemplos)", s5_counter == 0)
+    expect(f"5d. In S5 the full theorem holds ({s5_counter} counterexamples)", s5_counter == 0)
 
 
 if __name__ == "__main__":
     run_s5()
     run_frames()
-    print("\nRESULTADO:", "tudo confirmado" if not failures else f"falhas: {failures}")
+    print("\nRESULT:", "all confirmed" if not failures else f"failures: {failures}")
     sys.exit(1 if failures else 0)
